@@ -38,7 +38,7 @@
     },
     "vizdoom_mode": "PLAYER",
     "n_parallel": 4,
-    "frame_skip": 4,
+    "frame_skip": 2,
     "frame_stack": 4,
     "action_combination": false,
     "action_noop": true,
