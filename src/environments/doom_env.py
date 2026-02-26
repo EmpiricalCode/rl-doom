@@ -62,6 +62,10 @@ class DoomEnv(gym.Env):
     def render(self, **kwargs):
         return self.game_frame()
 
+    def seed(self, seed=None):
+        if seed is not None:
+            self.game.set_seed(seed)
+
     def close(self):
         self.game.close()
 

@@ -18,8 +18,9 @@ def init_weights(model: ActorCriticPolicy, model_config: ModelConfig):
     init_net(model.policy.features_extractor.cnn, model_config)
     init_net(model.policy.features_extractor.linear, model_config)
 
-    # Initialize shared net
-    init_net(model.policy.mlp_extractor.shared_net, model_config)
+    # Initialize shared net (removed in newer SB3 versions)
+    if hasattr(model.policy.mlp_extractor, 'shared_net'):
+        init_net(model.policy.mlp_extractor.shared_net, model_config)
 
     # Initialize policy net
     init_net(model.policy.mlp_extractor.policy_net, model_config)

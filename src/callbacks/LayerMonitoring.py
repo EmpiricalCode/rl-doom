@@ -3,7 +3,7 @@ from stable_baselines3.common.callbacks import BaseCallback
 
 class LayerActivationMonitoring(BaseCallback):
     def _on_step(self) -> bool:
-        pass
+        return True
 
     def __init__(self, verbose=0):
         super(LayerActivationMonitoring, self).__init__(verbose)
