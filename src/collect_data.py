@@ -45,7 +45,7 @@ def collect_data(config_path, load_from, num_steps=100_000, output_file="vizdoom
             # Get the raw frame (result of taking action) and resize to 64x64
             raw_frame = env.venv.envs[0].game.get_state()
             if raw_frame is not None:
-                frame_rgb = raw_frame.screen_buffer.transpose(1, 2, 0)  # CHW -> HWC
+                frame_rgb = raw_frame.screen_buffer  # Already HWC (240, 320, 3) with RGB24
                 frame_resized = cv2.resize(frame_rgb, (64, 64), interpolation=cv2.INTER_AREA)
             else:
                 frame_resized = np.zeros((64, 64, 3), dtype=np.uint8)
@@ -91,6 +91,6 @@ if __name__ == "__main__":
     collect_data(
         config_path=args.config,
         load_from=args.load,
-        num_steps=100_000,
+        num_steps=1000,
         output_file="vizdoom_deathmatch.h5",
     )
