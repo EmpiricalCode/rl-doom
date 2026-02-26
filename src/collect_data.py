@@ -91,6 +91,6 @@ if __name__ == "__main__":
     collect_data(
         config_path=args.config,
         load_from=args.load,
-        num_steps=1000,
+        num_steps=100000,
         output_file="vizdoom_deathmatch.h5",
     )
