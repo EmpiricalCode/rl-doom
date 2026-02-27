@@ -26,6 +26,7 @@ def collect_data(config_path, load_from, num_steps=100_000, output_file="vizdoom
     all_actions = []
     all_rewards = []
     all_dones = []
+    all_deaths = []
 
     total_steps = 0
     episode = 0
@@ -40,7 +41,7 @@ def collect_data(config_path, load_from, num_steps=100_000, output_file="vizdoom
             action, _ = agent.predict(obs, deterministic=False)
             action_val = action[0] if hasattr(action, '__len__') else action
 
-            obs, reward, done, _ = env.step(action)
+            obs, reward, done, info = env.step(action)
 
             # Get the raw frame (result of taking action) and resize to 64x64
             raw_frame = env.venv.envs[0].game.get_state()
@@ -52,12 +53,17 @@ def collect_data(config_path, load_from, num_steps=100_000, output_file="vizdoom
 
             done_val = done[0] if hasattr(done, '__len__') else done
             reward_val = reward[0] if hasattr(reward, '__len__') else reward
+            died_val = info[0].get('died', False) if isinstance(info, list) else info.get('died', False)
 
             # Record: action that caused this state, alongside the resulting state
             all_frames.append(frame_resized)
             all_actions.append(action_val)
             all_rewards.append(reward_val)
-            all_dones.append(done_val)
+            all_dones.append(done_val or died_val)
+            all_deaths.append(died_val)
+
+            if done_val or died_val:
+                print(f"  [DONE] at step {total_steps}")
 
             total_steps += 1
             episode_steps += 1
@@ -77,6 +83,7 @@ def collect_data(config_path, load_from, num_steps=100_000, output_file="vizdoom
         f.create_dataset("actions", data=np.array(all_actions), compression="lzf")
         f.create_dataset("rewards", data=np.array(all_rewards), compression="lzf")
         f.create_dataset("dones", data=np.array(all_dones), compression="lzf")
+        f.create_dataset("deaths", data=np.array(all_deaths), compression="lzf")
 
     print(f"\nData saved to {out_path}")
     print(f"Frames: {np.array(all_frames).shape}")
@@ -91,6 +98,6 @@ if __name__ == "__main__":
     collect_data(
         config_path=args.config,
         load_from=args.load,
-        num_steps=100000,
+        num_steps=100_000,
         output_file="vizdoom_deathmatch.h5",
     )
