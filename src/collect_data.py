@@ -98,6 +98,6 @@ if __name__ == "__main__":
     collect_data(
         config_path=args.config,
         load_from=args.load,
-        num_steps=100_000,
+        num_steps=args.steps if args.steps else 100_000,
         output_file="vizdoom_deathmatch.h5",
     )
