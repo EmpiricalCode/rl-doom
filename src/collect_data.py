@@ -93,6 +93,7 @@ def collect_data(config_path, load_from, num_steps=100_000, output_file="vizdoom
 
 if __name__ == "__main__":
     parser = cli.get_parser()
+    parser.add_argument('--steps', type=int, help='Number of steps to collect')
     args = parser.parse_args()
 
     collect_data(
